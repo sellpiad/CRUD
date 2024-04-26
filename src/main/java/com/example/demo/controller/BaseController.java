@@ -1,9 +1,9 @@
 package com.example.demo.controller;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class BaseController {
 
     private final PostService postService;
+	
 
 	@GetMapping("/")
 	public String main(@RequestParam String param) {
@@ -73,5 +74,5 @@ public class BaseController {
 		} else{
 			return "failed";
 		}
-	}
+	}	
 }
