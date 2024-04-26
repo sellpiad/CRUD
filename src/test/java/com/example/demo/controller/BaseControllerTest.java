@@ -24,10 +24,11 @@ import com.example.demo.service.PostService;
 import com.example.demo.service.dto.CreatePostRequest;
 import com.example.demo.service.dto.GetListRequest;
 import com.example.demo.service.dto.GetPostRequest;
+import com.example.demo.service.dto.LoginMemberRequest;
 import com.example.demo.service.dto.UpdatePostRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@WebMvcTest(BaseController.class)
+@WebMvcTest(PostController.class)
 class BaseControllerTest {
 
     // BaseController에서 잡고 있는 servcie 객체에 대한 mockbean
@@ -64,10 +65,11 @@ class BaseControllerTest {
     @DisplayName("포스트 생성")
     void createTest() throws Exception {
         CreatePostRequest createPostRequest = new CreatePostRequest("test", "haha", "man");
+        LoginMemberRequest loginMemberRequest = new LoginMemberRequest(null, 0, null, null, null);
         String content = obejctMapper.writeValueAsString(createPostRequest);
 
-        when(postService.createPost(createPostRequest))
-                .thenReturn("success");
+        when(postService.createPost(createPostRequest,loginMemberRequest))
+                .thenReturn(true);
 
         mockMvc.perform(
                 post("/createPost")
@@ -76,7 +78,7 @@ class BaseControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
 
-        verify(postService).createPost(createPostRequest);
+        verify(postService).createPost(createPostRequest,loginMemberRequest);
     }
 
     @Test
@@ -84,8 +86,8 @@ class BaseControllerTest {
     void updateTest() throws Exception {
         UpdatePostRequest updatePostRequest = new UpdatePostRequest(1,"haha","haha", "haha");
         String content = obejctMapper.writeValueAsString(updatePostRequest);
-
-        when(postService.updatePost(updatePostRequest)).thenReturn("success");
+        LoginMemberRequest loginMemberRequest = new LoginMemberRequest(null, 0, null, null, null);
+        when(postService.updatePost(updatePostRequest,loginMemberRequest)).thenReturn(true);
 
         mockMvc.perform(
                 post("/updatePost?id=" + updatePostRequest.getId())
@@ -94,7 +96,7 @@ class BaseControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
 
-        verify(postService).updatePost(updatePostRequest);
+        verify(postService).updatePost(updatePostRequest,loginMemberRequest);
 
     }
 
@@ -102,15 +104,15 @@ class BaseControllerTest {
     @DisplayName("포스트 삭제")
     void deleteTest() throws Exception {
         int postId = 1;
-
-        when(postService.deletePost(postId)).thenReturn("success");
+        LoginMemberRequest loginMemberRequest = new LoginMemberRequest(null, 0, null, null, null);
+        when(postService.deletePost(postId,loginMemberRequest )).thenReturn(true);
 
         mockMvc.perform(
                 get("/deletePost?id=" + postId))
                 .andExpect(status().isOk())
                 .andDo(print());
 
-        verify(postService).deletePost(postId);
+        verify(postService).deletePost(postId,loginMemberRequest );
 
     }
 
@@ -119,10 +121,11 @@ class BaseControllerTest {
     void getPostTest() throws Exception {
 
         int postId = 0;
+        LoginMemberRequest loginMemberRequest = new LoginMemberRequest(null, 0, null, null, null);
 
         // postService가 클라이언트로부터 아이디값을 전송 받았을 때 예상값
-        when(postService.getPost(postId))
-                .thenReturn(new GetPostRequest(1, "test", "tset", "test", Date.valueOf("2024-04-21")));
+        when(postService.getPost(postId,loginMemberRequest))
+                .thenReturn(new GetPostRequest(1, "test", "tset", "test", Date.valueOf("2024-04-21"),false,false));
 
         // 기대값(클라이언트에게 전송하는 response)이 나왔는지 확인
         mockMvc.perform(
@@ -136,7 +139,7 @@ class BaseControllerTest {
                 .andDo(print());
 
         // 제대로 실행됐는지 체크
-        verify(postService).getPost(postId);
+        verify(postService).getPost(postId,loginMemberRequest);
 
     }
 

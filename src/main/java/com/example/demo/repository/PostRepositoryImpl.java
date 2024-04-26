@@ -9,32 +9,33 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.repository.entity.Post;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class PostRepositoryImpl implements PostRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public String create(Post post) {
+    public boolean create(Post post, int memberNum) {
 
-        String query = "INSERT INTO board_1 (title,content,author) value('"
+        String query = "INSERT INTO board_1 (title,content,author,authorNum) value('"
                 + post.getTitle() + "', '"
                 + post.getContent() + "', '"
-                + post.getAuthor() + "')";
+                + post.getAuthor() + "', "
+                + memberNum + ")";
 
-        int result = this.jdbcTemplate.update(query);
+        if (this.jdbcTemplate.update(query) == 1)
+            return true;
+        else
+            return false;
 
-        if(result==1){
-            return "success";
-        } else {
-            return "failed";
-        }
     }
 
     @Override
-    public String update(Post post) {
+    public boolean update(Post post) {
 
         String query = "UPDATE board_1 SET "
                 + "author = '" + post.getAuthor() + "', "
@@ -42,12 +43,10 @@ public class PostRepositoryImpl implements PostRepository {
                 + "content = '" + post.getContent() + "' "
                 + "WHERE id = " + post.getId() + ";";
 
-        int result = this.jdbcTemplate.update(query);
-
-        if(result==0)
-            return "failed";
-        else{
-            return "success";
+        if (this.jdbcTemplate.update(query) == 1)
+            return true;
+        else {
+            return false;
         }
     }
 
@@ -86,11 +85,34 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
-    public String delete(int id) {
+    public boolean delete(int id) {
 
         String query = "DELETE FROM board_1 WHERE ID = " + id + ";";
 
-        return this.jdbcTemplate.update(query) + "";
+        if (this.jdbcTemplate.update(query) == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @SuppressWarnings("null")
+    @Override
+    public boolean memberCheck(int postNum, int memberNum) {
+
+        String query = "SELECT authorNum FROM board_1 WHERE id=?";
+        int authorNum = this.jdbcTemplate.queryForObject(query, (rs, rowNum) -> {
+            return rs.getInt("authorNum");
+        }, postNum);
+
+        log.debug("postNum={}", postNum);
+        log.debug("memberNum={}", memberNum);
+        log.debug("authorNum={}", authorNum);
+
+        if (authorNum == memberNum) {
+            return true;
+        } else
+            return false;
     }
 
 }

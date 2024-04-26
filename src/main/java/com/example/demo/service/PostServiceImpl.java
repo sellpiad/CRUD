@@ -10,6 +10,7 @@ import com.example.demo.repository.entity.Post;
 import com.example.demo.service.dto.CreatePostRequest;
 import com.example.demo.service.dto.GetListRequest;
 import com.example.demo.service.dto.GetPostRequest;
+import com.example.demo.service.dto.LoginMemberRequest;
 import com.example.demo.service.dto.UpdatePostRequest;
 
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class PostServiceImpl implements PostService{
     private final PostRepositoryImpl postRepositoryImpl;
     
     @Override
-    public String createPost(CreatePostRequest createPostRequest){
+    public boolean createPost(CreatePostRequest createPostRequest, LoginMemberRequest loginMemberRequest){
         
         Post post = Post.builder()
         .author(createPostRequest.getAuthor())
@@ -29,40 +30,65 @@ public class PostServiceImpl implements PostService{
         .content(createPostRequest.getContent())
         .build();
 
-        return postRepositoryImpl.create(post);
+        return postRepositoryImpl.create(post,loginMemberRequest.getUserNum());
     }
 
     @Override
-    public String updatePost(UpdatePostRequest updatePostRequest){
+    public boolean updatePost(UpdatePostRequest updatePostRequest, LoginMemberRequest loginMemberRequest){
 
-        Post post = Post.builder()
-        .id(updatePostRequest.getId())
-        .title(updatePostRequest.getTitle())
-        .author(updatePostRequest.getAuthor())
-        .content(updatePostRequest.getContent())
-        .build();
+        if(postRepositoryImpl.memberCheck(updatePostRequest.getId(), loginMemberRequest.getUserNum())){
+           
+            Post post = Post.builder()
+            .id(updatePostRequest.getId())
+            .title(updatePostRequest.getTitle())
+            .author(updatePostRequest.getAuthor())
+            .content(updatePostRequest.getContent())
+            .build();
+    
+            return postRepositoryImpl.update(post);
+        } else{
 
-        return postRepositoryImpl.update(post);
 
+        }
+            return false;
+        
     }
 
     @Override
-    public String deletePost(int id){
-        return postRepositoryImpl.delete(id);
+    public boolean deletePost(int id, LoginMemberRequest loginMemberRequest){
+
+        if(postRepositoryImpl.memberCheck(id, loginMemberRequest.getUserNum())){
+            return postRepositoryImpl.delete(id);
+        } else
+            return false;
     }
 
     @Override
-    public GetPostRequest getPost(int id){
+    public GetPostRequest getPost(int id,LoginMemberRequest loginMemberRequest){
 
         Post post = postRepositoryImpl.findById(id);
 
-        return GetPostRequest.builder()
-        .id(post.getId())
-        .author(post.getAuthor())
-        .title(post.getTitle())
-        .content(post.getContent())
-        .createTime(post.getCreateTime())
-        .build();
+        if(postRepositoryImpl.memberCheck(id,loginMemberRequest.getUserNum())){
+            return GetPostRequest.builder()
+            .id(post.getId())
+            .author(post.getAuthor())
+            .title(post.getTitle())
+            .content(post.getContent())
+            .createTime(post.getCreateTime())
+            .isDeletable(true)
+            .isEditable(true)
+            .build();
+        } else{
+            return GetPostRequest.builder()
+            .id(post.getId())
+            .author(post.getAuthor())
+            .title(post.getTitle())
+            .content(post.getContent())
+            .createTime(post.getCreateTime())
+            .isDeletable(false)
+            .isEditable(false)
+            .build();
+        }
     }
 
     @Override

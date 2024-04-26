@@ -6,10 +6,11 @@ import com.example.demo.repository.entity.Post;
 
 public interface PostRepository {
 
-    String create(Post post);
+    boolean create(Post post,int memberNum);
     List<Post> findAll();
     Post findById(int id);
-    String update(Post post);
-    String delete(int id);
+    boolean update(Post post);
+    boolean delete(int id);
+    boolean memberCheck(int postNum, int memberNum);
 
 }
