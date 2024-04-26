@@ -7,8 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
 @AllArgsConstructor
+@Builder
 public class GetPostRequest {
 
     private int id;
@@ -16,6 +16,6 @@ public class GetPostRequest {
     private String title;
     private String content;
     private Date createTime;
-
-    
+    private boolean isDeletable;
+    private boolean isEditable;
 }

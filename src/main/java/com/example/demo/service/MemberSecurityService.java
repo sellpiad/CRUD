@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.repository.MemberRepositoryImpl;
 import com.example.demo.repository.entity.Member;
-import com.example.demo.service.dto.loginMemberRequest;
+import com.example.demo.service.dto.LoginMemberRequest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +41,7 @@ public class MemberSecurityService implements UserDetailsService{
 
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         
-        return new loginMemberRequest(member.getId(), member.getPassword(), authorities);
+        return new LoginMemberRequest(member.getId(),member.getMemberNum(), member.getPassword(), member.getCreateTime(), authorities);
         
     }
 

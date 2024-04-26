@@ -17,6 +17,7 @@ public class Post extends BaseTime{
     private String title;
     private String content;
     private String author;
+    private int authorNum;
 
     @Builder
     public Post(int id, String title, String content, String author, Date createTime){

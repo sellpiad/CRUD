@@ -9,4 +9,5 @@ public interface MemberRepository {
     String deleteMember(Member member);
     Member findByMemberName(String memberName);
 
+
 }

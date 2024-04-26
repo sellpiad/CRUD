@@ -61,7 +61,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public Member findByMemberName(String memberName) throws EmptyResultDataAccessException{
-        String query = "SELECT id, password FROM member WHERE id=?;";
+        String query = "SELECT memberNum, id, password, createTime FROM member WHERE id=?;";
 
         log.info("Member Repository Access!");
         log.debug("membername={}",memberName);
@@ -72,8 +72,10 @@ public class MemberRepositoryImpl implements MemberRepository {
     private RowMapper<Member> memberMapper() {
         return(rs,rowNum) -> {
             return Member.builder()
+            .memberNum(rs.getInt("memberNum"))
             .id(rs.getString("id"))
             .password(rs.getString("password"))
+            .createTime(rs.getDate("createTime"))
             .build();
         };
     }

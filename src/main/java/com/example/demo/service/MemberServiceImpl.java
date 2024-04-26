@@ -1,7 +1,5 @@
 package com.example.demo.service;
 
-import java.util.logging.Logger;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
