@@ -1,7 +1,5 @@
 package com.example.demo.repository;
 
-import java.util.logging.Logger;
-
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

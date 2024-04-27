@@ -1,26 +1,28 @@
 package com.example.demo.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.service.MemberService;
-import com.example.demo.service.dto.CreateMemberRequest;
-import com.example.demo.service.dto.LoginMemberRequest;
+import com.example.demo.service.dto.authorDto.JwtToken;
+import com.example.demo.service.dto.memberDto.CreateMemberRequest;
+import com.example.demo.service.memberService.MemberService;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 
 
 @AllArgsConstructor
@@ -41,18 +43,37 @@ public class UserController {
 		return result;
 	}
 
-	@RequestMapping("/userinfo")
-	public ResponseEntity<Map<String,String>> login(@AuthenticationPrincipal(errorOnInvalidType = true) LoginMemberRequest loginMemberRequest) {
+	@RequestMapping("/signin")
+	@ResponseBody
+	public ResponseEntity<Map<String,String>> signin(@RequestParam String username, String password, HttpServletResponse response) {
 		//TODO: process POST request
 
-		Map<String,String> user = new HashMap<>();
+		JwtToken jwtToken = memberService.signIn(username,password);
 
-		user.put("id", loginMemberRequest.getUsername());
-		user.put("createTime",loginMemberRequest.getCreateTime().toString());
+		Cookie cookie = new Cookie("refreshToken", jwtToken.getRefreshToken());
 
-		return new ResponseEntity<>(user, HttpStatus.OK);
+		cookie.setMaxAge(7 * 24 * 60 * 60);
+
+		cookie.setSecure(true);
+		cookie.setHttpOnly(true);
+		cookie.setPath("/");
 		
+		response.addCookie(cookie);
+
+		HashMap<String,String> tokenForCli = new HashMap<>();
+
+		tokenForCli.put("grantType", jwtToken.getGrantType());
+		tokenForCli.put("accessToken", jwtToken.getAccessToken());
+		
+		return new ResponseEntity<>(tokenForCli,HttpStatus.OK);
 	}
+
+	@GetMapping("/userInfo")
+	public String userInfo(@RequestParam String param) {
+
+		return new String();
+	}
+	
 
 
 	
