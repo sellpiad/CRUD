@@ -11,7 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.example.demo.customFilter.JwtAuthenticationFilter;
-import com.example.demo.service.JwtTokenProvider;
+import com.example.demo.service.memberService.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,19 +28,20 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-        .csrf((csrf)->csrf.disable())
-        .cors((cors) -> cors.disable())
-        .formLogin((formLogin)->formLogin.successForwardUrl("/signin").failureForwardUrl("/failed"))
-        .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests.anyRequest().permitAll())
-        .sessionManagement((session)->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
-        ;
-
+                .csrf((csrf) -> csrf.disable())
+                .cors((cors) -> cors.disable())
+                .formLogin((formLogin) -> formLogin.successForwardUrl("/signin").failureForwardUrl("/failed"))
+                .authorizeHttpRequests(
+                        (authorizeHttpRequests) -> authorizeHttpRequests.anyRequest().permitAll())
+                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+                        UsernamePasswordAuthenticationFilter.class);
+                                                                                                                                                                                                                                                            
         return http.build();
     }
 
     @Bean
-    PasswordEncoder passwordEncoder() throws Exception{
+    PasswordEncoder passwordEncoder() throws Exception {
         return new BCryptPasswordEncoder();
     }
 

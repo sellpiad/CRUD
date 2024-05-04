@@ -23,7 +23,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepositoryImpl memberRepositoryImpl;
     private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwuJwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     
     @Override
@@ -56,13 +56,14 @@ public class MemberServiceImpl implements MemberService {
         return memberRepositoryImpl.findByMemberName(memberName);
     }
 
+    // JWT를 발급하여 로그인 처리.
     @Override
     public JwtToken signIn(String username, String password){
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
         Optional<Authentication> authentication = Optional.ofNullable(authenticationManagerBuilder.getObject().authenticate(authenticationToken));
 
-        JwtToken jwtToken =  jwuJwtTokenProvider.generateToken(authentication.orElse(null));
+        JwtToken jwtToken =  jwtTokenProvider.generateToken(authentication.orElse(null));
 
         return jwtToken;
     

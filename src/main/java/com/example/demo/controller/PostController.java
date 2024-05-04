@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.service.PostService;
-import com.example.demo.service.dto.CreatePostRequest;
-import com.example.demo.service.dto.GetListRequest;
-import com.example.demo.service.dto.GetPostRequest;
-import com.example.demo.service.dto.UpdatePostRequest;
-import com.example.demo.service.dto.LoginMemberRequest;
+import com.example.demo.service.dto.memberDto.LoginMemberRequest;
+import com.example.demo.service.dto.postDto.CreatePostRequest;
+import com.example.demo.service.dto.postDto.GetListRequest;
+import com.example.demo.service.dto.postDto.GetPostRequest;
+import com.example.demo.service.dto.postDto.UpdatePostRequest;
+import com.example.demo.service.postService.PostService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,8 +37,8 @@ public class PostController {
 	}
 
 	@GetMapping("/getPost")
-	public GetPostRequest getPost(@RequestParam int id,@AuthenticationPrincipal LoginMemberRequest loginMemberRequest) {
-
+	public GetPostRequest getPost(@RequestParam int id, @AuthenticationPrincipal LoginMemberRequest loginMemberRequest) {
+		
 		return postService.getPost(id,loginMemberRequest);
 	}
 

@@ -9,7 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.repository.entity.Member;
-import com.example.demo.service.dto.CreateMemberRequest;
+import com.example.demo.repository.memberRepo.MemberRepositoryImpl;
+import com.example.demo.service.dto.memberDto.CreateMemberRequest;
 
 @SpringBootTest()
 public class MemberRepositoryImplTest {

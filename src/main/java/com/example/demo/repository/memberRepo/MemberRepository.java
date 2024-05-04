@@ -1,4 +1,4 @@
-package com.example.demo.repository;
+package com.example.demo.repository.memberRepo;
 
 import com.example.demo.repository.entity.Member;
 

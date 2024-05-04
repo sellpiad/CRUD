@@ -1,17 +1,17 @@
-package com.example.demo.service;
+package com.example.demo.service.postService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.repository.PostRepositoryImpl;
 import com.example.demo.repository.entity.Post;
-import com.example.demo.service.dto.CreatePostRequest;
-import com.example.demo.service.dto.GetListRequest;
-import com.example.demo.service.dto.GetPostRequest;
-import com.example.demo.service.dto.LoginMemberRequest;
-import com.example.demo.service.dto.UpdatePostRequest;
+import com.example.demo.repository.postRepo.PostRepositoryImpl;
+import com.example.demo.service.dto.memberDto.LoginMemberRequest;
+import com.example.demo.service.dto.postDto.CreatePostRequest;
+import com.example.demo.service.dto.postDto.GetListRequest;
+import com.example.demo.service.dto.postDto.GetPostRequest;
+import com.example.demo.service.dto.postDto.UpdatePostRequest;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,7 +36,7 @@ public class PostServiceImpl implements PostService{
     @Override
     public boolean updatePost(UpdatePostRequest updatePostRequest, LoginMemberRequest loginMemberRequest){
 
-        if(postRepositoryImpl.memberCheck(updatePostRequest.getId(), loginMemberRequest.getUserNum())){
+        if(loginMemberRequest != null && postRepositoryImpl.memberCheck(updatePostRequest.getId(), loginMemberRequest.getUserNum())){
            
             Post post = Post.builder()
             .id(updatePostRequest.getId())
@@ -57,7 +57,7 @@ public class PostServiceImpl implements PostService{
     @Override
     public boolean deletePost(int id, LoginMemberRequest loginMemberRequest){
 
-        if(postRepositoryImpl.memberCheck(id, loginMemberRequest.getUserNum())){
+        if(loginMemberRequest != null && postRepositoryImpl.memberCheck(id, loginMemberRequest.getUserNum())){
             return postRepositoryImpl.delete(id);
         } else
             return false;
@@ -68,7 +68,7 @@ public class PostServiceImpl implements PostService{
 
         Post post = postRepositoryImpl.findById(id);
 
-        if(postRepositoryImpl.memberCheck(id,loginMemberRequest.getUserNum())){
+        if(loginMemberRequest != null && postRepositoryImpl.memberCheck(id,loginMemberRequest.getUserNum())){
             return GetPostRequest.builder()
             .id(post.getId())
             .author(post.getAuthor())

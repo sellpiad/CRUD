@@ -1,8 +1,8 @@
-package com.example.demo.service;
+package com.example.demo.service.memberService;
 
 import com.example.demo.repository.entity.Member;
-import com.example.demo.service.dto.CreateMemberRequest;
-import com.example.demo.service.dto.JwtToken;
+import com.example.demo.service.dto.authorDto.JwtToken;
+import com.example.demo.service.dto.memberDto.CreateMemberRequest;
 
 
 public interface MemberService {

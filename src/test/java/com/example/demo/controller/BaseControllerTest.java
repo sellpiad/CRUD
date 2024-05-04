@@ -20,12 +20,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.example.demo.service.PostService;
-import com.example.demo.service.dto.CreatePostRequest;
-import com.example.demo.service.dto.GetListRequest;
-import com.example.demo.service.dto.GetPostRequest;
-import com.example.demo.service.dto.LoginMemberRequest;
-import com.example.demo.service.dto.UpdatePostRequest;
+import com.example.demo.service.dto.memberDto.LoginMemberRequest;
+import com.example.demo.service.dto.postDto.CreatePostRequest;
+import com.example.demo.service.dto.postDto.GetListRequest;
+import com.example.demo.service.dto.postDto.GetPostRequest;
+import com.example.demo.service.dto.postDto.UpdatePostRequest;
+import com.example.demo.service.postService.PostService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebMvcTest(PostController.class)
@@ -65,7 +65,7 @@ class BaseControllerTest {
     @DisplayName("포스트 생성")
     void createTest() throws Exception {
         CreatePostRequest createPostRequest = new CreatePostRequest("test", "haha", "man");
-        LoginMemberRequest loginMemberRequest = new LoginMemberRequest(null, 0, null, null, null);
+        LoginMemberRequest loginMemberRequest = new LoginMemberRequest("test",0,"haha",null,null);
         String content = obejctMapper.writeValueAsString(createPostRequest);
 
         when(postService.createPost(createPostRequest,loginMemberRequest))
@@ -86,7 +86,7 @@ class BaseControllerTest {
     void updateTest() throws Exception {
         UpdatePostRequest updatePostRequest = new UpdatePostRequest(1,"haha","haha", "haha");
         String content = obejctMapper.writeValueAsString(updatePostRequest);
-        LoginMemberRequest loginMemberRequest = new LoginMemberRequest(null, 0, null, null, null);
+        LoginMemberRequest loginMemberRequest = new LoginMemberRequest("test",0,"haha",null,null);
         when(postService.updatePost(updatePostRequest,loginMemberRequest)).thenReturn(true);
 
         mockMvc.perform(
@@ -104,7 +104,7 @@ class BaseControllerTest {
     @DisplayName("포스트 삭제")
     void deleteTest() throws Exception {
         int postId = 1;
-        LoginMemberRequest loginMemberRequest = new LoginMemberRequest(null, 0, null, null, null);
+        LoginMemberRequest loginMemberRequest = new LoginMemberRequest("test",0,"haha",null,null);
         when(postService.deletePost(postId,loginMemberRequest )).thenReturn(true);
 
         mockMvc.perform(
@@ -121,7 +121,7 @@ class BaseControllerTest {
     void getPostTest() throws Exception {
 
         int postId = 0;
-        LoginMemberRequest loginMemberRequest = new LoginMemberRequest(null, 0, null, null, null);
+        LoginMemberRequest loginMemberRequest = new LoginMemberRequest("test",0,"haha",null,null);
 
         // postService가 클라이언트로부터 아이디값을 전송 받았을 때 예상값
         when(postService.getPost(postId,loginMemberRequest))

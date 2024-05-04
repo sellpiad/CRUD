@@ -1,4 +1,4 @@
-package com.example.demo.repository;
+package com.example.demo.repository.memberRepo;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -60,9 +60,6 @@ public class MemberRepositoryImpl implements MemberRepository {
     @Override
     public Member findByMemberName(String memberName) throws EmptyResultDataAccessException{
         String query = "SELECT memberNum, id, password, createTime FROM member WHERE id=?;";
-
-        log.info("Member Repository Access!");
-        log.debug("membername={}",memberName);
 
         return this.jdbcTemplate.queryForObject(query, memberMapper(), memberName);
     }

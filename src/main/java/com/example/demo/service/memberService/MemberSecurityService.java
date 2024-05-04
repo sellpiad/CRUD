@@ -1,21 +1,18 @@
-package com.example.demo.service;
+package com.example.demo.service.memberService;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.repository.MemberRepositoryImpl;
 import com.example.demo.repository.entity.Member;
-import com.example.demo.service.dto.LoginMemberRequest;
+import com.example.demo.repository.memberRepo.MemberRepositoryImpl;
+import com.example.demo.service.dto.memberDto.LoginMemberRequest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +27,6 @@ public class MemberSecurityService implements UserDetailsService{
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        log.info("loadUserByUsername start! username={}",username);
-
         Member member = this.memberRepositoryImpl.findByMemberName(username);
 
         if(member==null)
@@ -44,7 +39,4 @@ public class MemberSecurityService implements UserDetailsService{
         return new LoginMemberRequest(member.getId(),member.getMemberNum(), member.getPassword(), member.getCreateTime(), authorities);
         
     }
-
-
 }
-
